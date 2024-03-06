@@ -1,6 +1,8 @@
 package com.example.retrofit_java;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -18,15 +20,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-TextView textView;
+RecyclerView recyclerView;
 ProgressBar progressBar;
 Button button,button2;
-RetrofitService service;
+    RetrofitService service;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView=findViewById(R.id.textView);
+        recyclerView=findViewById(R.id.recyclerView);
         progressBar=findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         button=findViewById(R.id.getBtn);
@@ -46,10 +48,9 @@ RetrofitService service;
                     public void onResponse(Call<List<Source>> call, Response<List<Source>> response) {
                         progressBar.setVisibility(View.INVISIBLE);
                         List<Source> sources=response.body();
-                        for(Source source:sources)
-                        {
-                            textView.append(source.getTitle());
-                        }
+                      RecyclerAdapter recyclerAdapter=new RecyclerAdapter(MainActivity.this,sources);
+                      recyclerView.setAdapter(recyclerAdapter);
+                      recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     }
 
                     @Override
@@ -68,7 +69,7 @@ RetrofitService service;
                     @Override
                     public void onResponse(Call<PostsModel> call, Response<PostsModel> response) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        textView.setText(response.body().getTitle());
+
                     }
 
                     @Override
